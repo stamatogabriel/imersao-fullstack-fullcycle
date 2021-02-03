@@ -7,7 +7,7 @@ import (
 )
 
 func init() {
-	govalidator.FieldsRequiredByDefault(true)
+	govalidator.SetFieldsRequiredByDefault(true)
 }
 
 type Base struct {
