@@ -2,9 +2,8 @@ package kafka
 
 import (
 	"fmt"
-	"os"
-
 	ckafka "github.com/confluentinc/confluent-kafka-go/kafka"
+	"os"
 )
 
 func NewKafkaProducer() *ckafka.Producer {
@@ -15,7 +14,6 @@ func NewKafkaProducer() *ckafka.Producer {
 	if err != nil {
 		panic(err)
 	}
-
 	return p
 }
 
@@ -26,9 +24,8 @@ func Publish(msg string, topic string, producer *ckafka.Producer, deliveryChan c
 	}
 	err := producer.Produce(message, deliveryChan)
 	if err != nil {
-		return nil
+		return err
 	}
-
 	return nil
 }
 
@@ -37,11 +34,10 @@ func DeliveryReport(deliveryChan chan ckafka.Event) {
 		switch ev := e.(type) {
 		case *ckafka.Message:
 			if ev.TopicPartition.Error != nil {
-				fmt.Println("Delivery failed: ", ev.TopicPartition)
+				fmt.Println("Delivery failed:", ev.TopicPartition)
 			} else {
-				fmt.Println("Delivery message to:", ev.TopicPartition)
+				fmt.Println("Delivered message to:", ev.TopicPartition)
 			}
-
 		}
 	}
 }

@@ -1,8 +1,6 @@
 package usecase
 
 import (
-	"errors"
-
 	"github.com/codeedu/imersao/codepix-go/domain/model"
 )
 
@@ -16,24 +14,23 @@ func (p *PixUseCase) RegisterKey(key string, kind string, accountId string) (*mo
 		return nil, err
 	}
 
-	pixKey, err := model.NewPixKey(kind, key, account)
+	pixKey, err := model.NewPixKey(kind, account, key)
 	if err != nil {
 		return nil, err
 	}
 
 	p.PixKeyRepository.RegisterKey(pixKey)
 	if pixKey.ID == "" {
-		return nil, errors.New("unable to create a new key at the moment")
+		return nil, err
 	}
 
 	return pixKey, nil
 }
 
 func (p *PixUseCase) FindKey(key string, kind string) (*model.PixKey, error) {
-	pixKey, err := p.FindKey(key, kind)
+	pixKey, err := p.PixKeyRepository.FindKeyByKind(key, kind)
 	if err != nil {
 		return nil, err
 	}
-
 	return pixKey, nil
 }
